@@ -124,7 +124,7 @@ fos/
 - Manage users
 - System settings
 
-## 🧪 Testing
+## Testing
 
 1. **Customer Flow**
    - Register → Login → Browse → Add to Cart → Checkout
@@ -132,7 +132,7 @@ fos/
 2. **Admin Flow**
    - Login → Dashboard → Manage Products → Process Orders
 
-## 📊 Database Normalization
+## Database Normalization
 
 All tables are normalized to Third Normal Form (3NF):
 - **1NF**: All attributes contain atomic values
@@ -141,18 +141,19 @@ All tables are normalized to Third Normal Form (3NF):
 
 See `documentation/er_diagram.png` for visual representation.
 
-## 🚀 Deployment
+## Deployment
 
 ### AWS Deployment
-[Instructions will be added after deployment]
+Currently am facing Difficulties in AWS account creation with fail to fetch Error
 
 ## 👥 Contributors
 
-- [Your Name] - Developer
+-  - Developer
 
 ## 📄 License
 
-This project is developed as part of academic coursework.
+This project is developed as part of academic coursework in Bachelor Degree of Information Technology, Second Year Student
+College of Business Education (CBE) Dar es Salaam Campus.
 
 ## 📞 Contact
 
