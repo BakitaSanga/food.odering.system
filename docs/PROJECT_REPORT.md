@@ -1,7 +1,7 @@
 ﻿# Food Ordering System
 ## Project Report
 
-**Student Name:** BAKITA SANGA  
+**Student Name:** ATUPIE BAKITA SANGA  
 **Student ID:** CBE/2026/001  
 **College:** COLLEGE OF BUSINESS EDUCATION DAR ES SALAAM CAMPUS CBE  
 **Submission Date:** February 6, 2026  
@@ -10,7 +10,7 @@
 ---
 
 ## Table of Contents
-
+      
 1. [Executive Summary](#1-executive-summary)
 2. [System Overview](#2-system-overview)
 3. [Database Design](#3-database-design)
@@ -742,8 +742,3 @@ $products = $conn->query("
 
 ---
 
-**End of Report**
-
-**Total Pages:** 18  
-**Word Count:** ~4,500  
-**Submission Date:** February 5, 2026
