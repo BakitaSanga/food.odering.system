@@ -3,7 +3,7 @@
 **Course Project Submission**
 
 ## Student Information
-- **Name**: Bakita Sanga
+- **Name**: Atupie Bakita Sanga
 - **Institution**: College of Business Education (CBE) - Dar es Salaam Campus
 - **Course**: Bachelor Degree in Information Technology (BIT)
 - **Year of Study**: Second Year
