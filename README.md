@@ -2,7 +2,7 @@
 
 A complete web-based food ordering system built with PHP, MySQL, and Vanilla JavaScript.
 
-## 🚀 Features
+## Features
 
 - **User Authentication**: Separate login for customers and administrators
 - **Product Management**: Full CRUD operations for menu items
@@ -12,14 +12,14 @@ A complete web-based food ordering system built with PHP, MySQL, and Vanilla Jav
 - **Role-Based Access**: Different permissions for admin and customers
 - **Responsive Design**: Works on desktop and mobile devices
 
-## 💻 Technology Stack
+## Technology Stack
 
 - **Frontend**: HTML5, CSS3, Vanilla JavaScript (No frameworks)
 - **Backend**: PHP 7.4+
 - **Database**: MySQL 5.7+
 - **Server**: Apache (XAMPP/LAMP/WAMP)
 
-## 📋 Database Schema
+## Database Schema
 
 The system uses 8 normalized tables (3NF compliant):
 
@@ -102,11 +102,11 @@ fos/
 - Session management
 - Role-based access control
 
-## 📱 Screenshots
+## Screenshots
 
 [Add screenshots here]
 
-## 🎯 Key Functionalities
+## Key Functionalities
 
 ### Customer Features
 - Browse menu items by category
@@ -155,7 +155,7 @@ Currently am facing Difficulties in AWS account creation with fail to fetch Erro
 This project is developed as part of academic coursework in Bachelor Degree of Information Technology, Second Year Student
 College of Business Education (CBE) Dar es Salaam Campus.
 
-## 📞 Contact
+## Contact
 
 For questions or support, contact: [your-email@example.com]
 
