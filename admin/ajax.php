@@ -116,3 +116,27 @@ if($action == "update_cart_qty"){
 		echo $save;
 }
 
+if($action == "delete_cart"){
+	$save = $crud->delete_cart();
+	if($save)
+		echo $save;
+}
+
+if($action == "forgot_password"){
+	$save = $crud->forgot_password();
+	if($save)
+		echo $save;
+}
+
+if($action == "verify_reset_token"){
+	$save = $crud->verify_reset_token();
+	if($save)
+		echo $save;
+}
+
+if($action == "reset_password"){
+	$save = $crud->reset_password();
+	if($save)
+		echo $save;
+}
+

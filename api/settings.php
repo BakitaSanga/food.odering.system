@@ -1,3 +1,4 @@
+<?php
 /**
  * API: System Settings
  * 
@@ -7,22 +8,27 @@
  * @package FoodOrderingSystem
  * @subpackage API
  */
-
-<?php
+session_start();
 include '../admin/db_connect.php';
 
 /**
  * Fetch system settings
- * Returns first row (should only be one settings record)
  */
 $settings = $conn->query("SELECT * FROM system_settings LIMIT 1")->fetch_assoc();
 
-/**
- * Return JSON response with settings
- */
-header('Content-Type: application/json');
-echo json_encode([
+$response = [
     'status' => 'success',
     'settings' => $settings
-]);
+];
+
+// Add user info if logged in
+if(isset($_SESSION['login_user_id'])){
+    $response['user'] = [
+        'id' => $_SESSION['login_user_id'],
+        'name' => $_SESSION['login_first_name'] . ' ' . $_SESSION['login_last_name']
+    ];
+}
+
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

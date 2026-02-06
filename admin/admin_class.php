@@ -16,78 +16,37 @@ Class Action {
 
 	function login(){
 		extract($_POST);
-		$qry = $this->db->query("SELECT * FROM users where username = '".$username."' and password = '".$password."' ");
+		$qry = $this->db->query("SELECT * FROM users where username = '".$username."'");
 		if($qry->num_rows > 0){
-			foreach ($qry->fetch_array() as $key => $value) {
-				if($key != 'password' && !is_numeric($key))
-					$_SESSION['login_'.$key] = $value;
+			$row = $qry->fetch_array();
+			if(password_verify($password, $row['password'])){
+				foreach ($row as $key => $value) {
+					if($key != 'password' && !is_numeric($key))
+						$_SESSION['login_'.$key] = $value;
+				}
+					return 1;
 			}
-				return 1;
 		}else{
 			return 3;
 		}
 	}
-	/**
-	 * Customer Login (login2)
-	 * 
-	 * Authenticates customer users from user_info table
-	 * Uses bcrypt for password verification
-	 * 
-	 * @return int 1 on success, 3 on failure
-	 */
 	function login2(){
 		extract($_POST);
-		
-		// Use prepared statement to prevent SQL injection
-		$stmt = $this->db->prepare("SELECT * FROM user_info WHERE email = ?");
-		$stmt->bind_param("s", $email);
-		$stmt->execute();
-		$result = $stmt->get_result();
-		
-		if($result->num_rows > 0){
-			$user = $result->fetch_assoc();
-			
-			// Verify password using bcrypt
-			// Check if password is MD5 (old) or bcrypt (new)
-			if(strlen($user['password']) == 32){
-				// Old MD5 password - check directly and upgrade
-				if($user['password'] == md5($password)){
-					// Update to bcrypt
-					$new_hash = password_hash($password, PASSWORD_BCRYPT);
-					$update = $this->db->prepare("UPDATE user_info SET password = ? WHERE user_id = ?");
-					$update->bind_param("si", $new_hash, $user['user_id']);
-					$update->execute();
-					
-					// Set session
-					foreach ($user as $key => $value) {
-						if($key != 'password' && !is_numeric($key))
-							$_SESSION['login_'.$key] = $value;
-					}
-					
-					// Update cart
-					$ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
-					$this->db->query("UPDATE cart SET user_id = '".$_SESSION['login_user_id']."' WHERE client_ip ='$ip' ");
-					
-					return 1;
+		$qry = $this->db->query("SELECT * FROM user_info where email = '".$email."'");
+		if($qry->num_rows > 0){
+			$row = $qry->fetch_array();
+			if(password_verify($password, $row['password'])){
+				foreach ($row as $key => $value) {
+					if($key != 'password' && !is_numeric($key))
+						$_SESSION['login_'.$key] = $value;
 				}
-			} else {
-				// Bcrypt password - verify properly
-				if(password_verify($password, $user['password'])){
-					// Set session
-					foreach ($user as $key => $value) {
-						if($key != 'password' && !is_numeric($key))
-							$_SESSION['login_'.$key] = $value;
-					}
-					
-					// Update cart
-					$ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
-					$this->db->query("UPDATE cart SET user_id = '".$_SESSION['login_user_id']."' WHERE client_ip ='$ip' ");
-					
+				$ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : (isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : $_SERVER['REMOTE_ADDR']);
+				$this->db->query("UPDATE cart set user_id = '".$_SESSION['login_user_id']."' where client_ip ='$ip' ");
 					return 1;
-				}
 			}
+		}else{
+			return 3;
 		}
-		return 3;
 	}
 	function logout(){
 		session_destroy();
@@ -108,7 +67,7 @@ Class Action {
 		extract($_POST);
 		$data = " name = '$name' ";
 		$data .= ", username = '$username' ";
-		$data .= ", password = '$password' ";
+		$data .= ", password = '".password_hash($password, PASSWORD_DEFAULT)."' ";
 		$data .= ", type = '$type' ";
 		if(empty($id)){
 			$save = $this->db->query("INSERT INTO users set ".$data);
@@ -126,7 +85,7 @@ Class Action {
 		$data .= ", mobile = '$mobile' ";
 		$data .= ", address = '$address' ";
 		$data .= ", email = '$email' ";
-		$data .= ", password = '".md5($password)."' ";
+		$data .= ", password = '".password_hash($password, PASSWORD_DEFAULT)."' ";
 		$chk = $this->db->query("SELECT * FROM user_info where email = '$email' ")->num_rows;
 		if($chk > 0){
 			return 2;
@@ -262,12 +221,22 @@ Class Action {
 		return 1;	
 	}
 
+	function delete_cart(){
+		extract($_POST);
+		$delete = $this->db->query("DELETE FROM cart where id = ".$id);
+		if($delete)
+			return 1;
+	}
+
 	function save_order(){
 		extract($_POST);
 		$data = " name = '".$first_name." ".$last_name."' ";
 		$data .= ", address = '$address' ";
 		$data .= ", mobile = '$mobile' ";
 		$data .= ", email = '$email' ";
+		if(isset($_SESSION['login_user_id'])){
+			$data .= ", user_id = '".$_SESSION['login_user_id']."' ";
+		}
 		$save = $this->db->query("INSERT INTO orders set ".$data);
 		if($save){
 			$id = $this->db->insert_id;
@@ -331,11 +300,62 @@ function delete_customer(){
 		return 1;
 }
 
-function update_cart_qty(){
+function forgot_password(){
 	extract($_POST);
-	$update = $this->db->query("UPDATE cart SET qty = ".$qty." WHERE id = ".$id);
-	if($update)
+	// Check if email exists
+	$check = $this->db->query("SELECT * FROM user_info WHERE email = '".$email."'");
+	if($check->num_rows == 0){
+		return 2; // Email not found
+	}
+	
+	// Generate reset token
+	$token = bin2hex(random_bytes(32));
+	$expires_at = date('Y-m-d H:i:s', strtotime('+1 hour'));
+	
+	// Delete any existing tokens for this email
+	$this->db->query("DELETE FROM password_resets WHERE email = '".$email."'");
+	
+	// Insert new token
+	$insert = $this->db->query("INSERT INTO password_resets (email, token, expires_at) VALUES ('".$email."', '".$token."', '".$expires_at."')");
+	
+	if($insert){
+		// In production, send email here
+		// For now, output the reset link to console
+		error_log("Password reset link: reset_password.html?token=".$token);
 		return 1;
+	}
+	return 0;
+}
+
+function verify_reset_token(){
+	extract($_POST);
+	$check = $this->db->query("SELECT * FROM password_resets WHERE token = '".$token."' AND expires_at > NOW()");
+	if($check->num_rows > 0){
+		return 1;
+	}
+	return 0;
+}
+
+function reset_password(){
+	extract($_POST);
+	// Verify token is valid
+	$check = $this->db->query("SELECT * FROM password_resets WHERE token = '".$token."' AND expires_at > NOW()");
+	if($check->num_rows == 0){
+		return 2; // Invalid or expired token
+	}
+	
+	$reset_data = $check->fetch_array();
+	$email = $reset_data['email'];
+	
+	// Update password
+	$update = $this->db->query("UPDATE user_info SET password = '".password_hash($password, PASSWORD_DEFAULT)."' WHERE email = '".$email."'");
+	
+	if($update){
+		// Delete used token
+		$this->db->query("DELETE FROM password_resets WHERE token = '".$token."'");
+		return 1;
+	}
+	return 0;
 }
 
 }

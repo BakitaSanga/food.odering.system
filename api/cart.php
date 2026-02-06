@@ -1,3 +1,4 @@
+<?php
 /**
  * API: Cart Operations
  * 
@@ -9,8 +10,6 @@
  * @package FoodOrderingSystem
  * @subpackage API
  */
-
-<?php
 session_start();
 include '../admin/db_connect.php';
 

@@ -70,6 +70,7 @@ CREATE TABLE `orders` (
   `address` text NOT NULL,
   `mobile` text NOT NULL,
   `email` text NOT NULL,
+  `user_id` int(30) NOT NULL,
   `status` tinyint(1) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -183,7 +184,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `username`, `password`, `type`) VALUES
-(1, 'Administrator', 'admin', 'admin123', 1);
+(1, 'Administrator', 'admin', '$2y$10$fkSPP08BriYqa.LTvfO.r.LZFiERAfizDBVVhh28sP2ZGtHOGQ/p2', 1);
 
 -- --------------------------------------------------------
 

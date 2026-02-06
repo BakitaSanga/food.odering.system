@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Sign Up - Food Order</title>
+    <title>Sign Up - Myrah Food Order</title>
+    <link rel="icon" type="image/png" href="assets/img/myrah_logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -91,7 +92,12 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label text-muted small">Password</label>
-                                <input type="password" name="password" class="form-control" required>
+                                <div class="position-relative">
+                                    <input type="password" name="password" id="signup-password" class="form-control"
+                                        required>
+                                    <i class="fas fa-eye position-absolute" id="togglePassword"
+                                        style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; color: #999;"></i>
+                                </div>
                             </div>
                             <div class="d-grid mt-4">
                                 <button type="submit" class="btn btn-primary">Sign Up</button>
@@ -107,27 +113,48 @@
         </div>
     </div>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $('#signup-form').submit(function (e) {
-            e.preventDefault();
-            const btn = $(this).find('button');
-            btn.prop('disabled', true).text('Creating...');
+        // Password visibility toggle - Vanilla JS
+        document.getElementById('togglePassword').addEventListener('click', function () {
+            const passwordField = document.getElementById('signup-password');
+            const type = passwordField.type === 'password' ? 'text' : 'password';
+            passwordField.type = type;
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
 
-            $.ajax({
-                url: 'admin/ajax.php?action=signup',
-                method: 'POST',
-                data: $(this).serialize(),
-                success: function (resp) {
-                    if (resp == 1) {
-                        alert('Account created! Please login.');
-                        window.location.href = 'login.html';
-                    } else {
-                        alert('Email already exists or error occurred.');
-                        btn.prop('disabled', false).text('Sign Up');
-                    }
+        // Signup form submission - Vanilla JS with Fetch API
+        document.getElementById('signup-form').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.textContent;
+            btn.disabled = true;
+            btn.textContent = 'Creating...';
+
+            const formData = new FormData(this);
+
+            try {
+                const response = await fetch('admin/ajax.php?action=signup', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const resp = await response.text();
+
+                if (resp == 1) {
+                    alert('Account created! Please login.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert('Email already exists or error occurred.');
+                    btn.disabled = false;
+                    btn.textContent = originalText;
                 }
-            });
+            } catch (error) {
+                console.error('Signup error:', error);
+                alert('An error occurred. Please try again.');
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
         });
     </script>
 </body>

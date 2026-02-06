@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>Loading...</title>
+    <title>Myrah Food Ordering System</title>
+    <link rel="icon" type="image/png" href="assets/img/myrah_logo.png">
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
@@ -176,7 +177,10 @@
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#" id="app-name"><i class="fas fa-utensils me-2"></i>FoodOrder</a>
+            <a class="navbar-brand d-flex align-items-center" href="#">
+                <img src="assets/img/myrah_logo.png" alt="Myrah Food Ordering"
+                    style="height: 40px; margin-right: 10px;">
+            </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -186,6 +190,7 @@
                     <li class="nav-item"><a class="nav-link" href="cart.html"><i class="fa fa-shopping-cart"></i> Cart
                             <span class="badge bg-danger" id="cart-count">0</span></a></li>
                     <li class="nav-item d-none" id="nav-login"><a class="nav-link" href="login.html">Login</a></li>
+                    <li class="nav-item d-none" id="nav-signup"><a class="nav-link" href="signup.html">Sign Up</a></li>
                     <li class="nav-item d-none" id="nav-user">
                         <a class="nav-link" href="#" id="user-name">User</a>
                     </li>
@@ -204,7 +209,7 @@
 
     <footer class="footer text-center">
         <div class="container">
-            <div class="small text-muted">&copy; 2026 Food Ordering System. Designed by Batika Sanga (Myrah)</div>
+            <p class="mb-0">&copy; 2026 Myrah Food Ordering System. Designed by Bakita Sanga.</p>
         </div>
     </footer>
 
@@ -212,7 +217,7 @@
     <template id="home-template">
         <header class="masthead" id="masthead">
             <div class="masthead-content container">
-                <h1 class="display-3 fw-bold mb-3" id="welcome-msg">Delicious Food Delivered</h1>
+                <h1 class="display-4 fw-bold mb-4" id="welcome-msg">Welcome to Myrah Food Ordering</h1>
                 <p class="lead mb-5 opacity-75">Order your favorites with just a few clicks.</p>
                 <a class="btn btn-primary btn-lg px-5 py-3 shadow-lg" href="#menu">Order Now</a>
             </div>
@@ -223,6 +228,42 @@
                 <div class="text-center mb-5">
                     <h2 class="fw-bold display-6">Our Menu</h2>
                     <div class="divider-custom"></div>
+                </div>
+
+                <!-- Search and Filter Section -->
+                <div class="row mb-5 justify-content-center">
+                    <div class="col-md-10">
+                        <div class="card p-4 shadow-sm">
+                            <form id="search-form" onsubmit="event.preventDefault(); filterProducts();">
+                                <div class="row g-3">
+                                    <div class="col-md-4">
+                                        <div class="input-group">
+                                            <span class="input-group-text bg-white border-end-0"><i
+                                                    class="fa fa-search text-muted"></i></span>
+                                            <input type="text" class="form-control border-start-0" id="search-input"
+                                                placeholder="Search for food...">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <select class="form-select" id="category-filter" onchange="filterProducts()">
+                                            <option value="all">All Categories</option>
+                                            <!-- Categories loaded dynamically -->
+                                        </select>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="input-group">
+                                            <span class="input-group-text">Max Price</span>
+                                            <input type="number" class="form-control" id="price-filter"
+                                                placeholder="Any" onchange="filterProducts()">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 d-grid">
+                                        <button type="submit" class="btn btn-primary">Search</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
                 </div>
                 <div class="row gx-4 gy-5" id="product-list">
                     <!-- Products -->
@@ -238,6 +279,7 @@
         // Init
         document.addEventListener('DOMContentLoaded', async () => {
             await loadSettings();
+            await loadCategories();
             loadHome();
         });
 
@@ -249,7 +291,9 @@
 
                 // Update UI
                 document.title = settings.name;
-                document.getElementById('app-name').innerText = settings.name;
+                if (document.getElementById('app-name')) {
+                    document.getElementById('app-name').innerText = settings.name;
+                }
 
                 // User state
                 if (data.user) {
@@ -259,10 +303,29 @@
                     loadCartCount();
                 } else {
                     document.getElementById('nav-login').classList.remove('d-none');
+                    document.getElementById('nav-signup').classList.remove('d-none');
                 }
 
             } catch (e) {
                 console.error("Failed to load settings", e);
+            }
+        }
+
+        async function loadCategories() {
+            try {
+                const res = await fetch('api/categories.php');
+                const categories = await res.json();
+                const filter = document.getElementById('category-filter');
+                if (filter) {
+                    categories.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat.id;
+                        option.textContent = cat.name;
+                        filter.appendChild(option);
+                    });
+                }
+            } catch (e) {
+                console.error("Failed to load categories", e);
             }
         }
 
@@ -281,22 +344,82 @@
             app.innerHTML = '';
             app.appendChild(content);
 
+            // Re-attach filter logic to new DOM elements if they were part of template (they are in static HTML in previous step, but let's be safe)
+            // Actually, the search-form was added OUTSIDE the template in my previous edit? 
+            // Wait, I added the search form to index.html directly, but loadHome rewrites app-content.
+            // My previous edit inserted the search form into the HTML file, but inside the "home-template" block or outside?
+            // Let's check where I inserted it. 
+            // I replaced lines 228-231 (Our Menu header). This was INSIDE the <template id="home-template">.
+            // So when loadHome() runs, it clones the template which includes the search form.
+            // So we need to re-fetch categories if we re-render home? No, categories are fetched once.
+            // But we need to populate the dropdown AGAIN because the DOM element is new.
+
+            // So, let's repopulate categories here or make loadCategories act on the current DOM.
+            // Since loadCategories runs on DOMContentLoaded, and loadHome runs after, loadHome will wipe the app-content.
+            // But the template contains the SELECT element. 
+            // So we need to populate the select element AFTER cloning.
+
+            await populateCategoryDropdown(); // Helper function
+
             // Load products
-            loadProducts();
+            filterProducts();
         }
 
-        async function loadProducts() {
+        async function populateCategoryDropdown() {
             try {
-                const res = await fetch('api/products.php');
-                const products = await res.json();
-                const container = document.getElementById('product-list');
+                const res = await fetch('api/categories.php');
+                const categories = await res.json();
+                const filter = document.getElementById('category-filter'); // This now exists in the DOM after loadHome appended content
+                if (filter) {
+                    // Clear existing options except first
+                    while (filter.options.length > 1) {
+                        filter.remove(1);
+                    }
+                    categories.forEach(cat => {
+                        const option = document.createElement('option');
+                        option.value = cat.id;
+                        option.textContent = cat.name;
+                        filter.appendChild(option);
+                    });
+                }
+            } catch (e) {
+                console.error("Failed to load categories", e);
+            }
+        }
 
+        async function filterProducts() {
+            const search = document.getElementById('search-input').value;
+            const category = document.getElementById('category-filter').value;
+            const maxPrice = document.getElementById('price-filter').value;
+
+            const params = new URLSearchParams();
+            if (search) params.append('search', search);
+            if (category && category !== 'all') params.append('category_id', category);
+            if (maxPrice) params.append('max_price', maxPrice);
+
+            loadProducts(params.toString());
+        }
+
+        async function loadProducts(queryString = '') {
+            const container = document.getElementById('product-list');
+            container.innerHTML = '<div class="col-12 text-center py-5"><div class="spinner-border text-primary" role="status"></div></div>';
+
+            try {
+                const res = await fetch(`api/products.php?${queryString}`);
+                const products = await res.json();
+
+                if (products.length === 0) {
+                    container.innerHTML = '<div class="col-12 text-center text-muted">No products found.</div>';
+                    return;
+                }
+
+                container.innerHTML = '';
                 products.forEach(p => {
                     const html = `
                         <div class="col-lg-3 col-md-6">
                             <div class="card h-100">
                                 <span class="badge-type">${p.category_name}</span>
-                                <img src="assets/img/${p.img_path}" class="card-img-top" alt="${p.name}">
+                                <img src="assets/img/${p.img_path}" class="card-img-top" alt="${p.name}" style="cursor: pointer;" onclick="viewProduct(${p.id})">
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">${p.name}</h5>
                                     <p class="card-text text-muted small text-truncate">${p.description}</p>
@@ -315,7 +438,12 @@
 
             } catch (e) {
                 console.error(e);
+                document.getElementById('product-list').innerHTML = '<div class="col-12 text-center text-danger">Error loading products.</div>';
             }
+        }
+
+        function viewProduct(id) {
+            window.location.href = `view_prod.html?id=${id}`;
         }
 
         function addToCart(pid) {

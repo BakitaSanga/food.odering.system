@@ -4,7 +4,8 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Product Details</title>
+    <title>Product Details - Myrah</title>
+    <link rel="icon" type="image/png" href="assets/img/myrah_logo.png">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
@@ -53,6 +54,25 @@
             padding: 0.5em 1em;
             border-radius: 30px;
         }
+
+        .btn-success {
+            background: var(--secondary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-success:hover {
+            background: #219150;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(39, 174, 96, 0.3);
+        }
+
+        .img-fluid {
+            border-radius: 20px 0 0 20px;
+        }
     </style>
 </head>
 
@@ -89,25 +109,50 @@
 
         function renderProduct(p) {
             const html = `
-                <div class="col-md-8">
+                <div class="col-md-10">
                     <div class="card">
-                        <img src="assets/img/${p.img_path}" class="card-img-top" alt="${p.name}">
-                        <div class="card-body">
-                            <h2 class="card-title fw-bold">${p.name}</h2>
-                            <span class="badge bg-info text-dark mb-3 badge-category">${p.category_name}</span>
-                            <h4 class="text-primary fw-bold mb-3">${p.price_formatted}</h4>
-                            <p class="card-text lead">${p.description}</p>
-                            
-                            <hr>
-                            <div class="d-flex align-items-center justify-content-between">
-                                <div class="input-group w-auto">
-                                    <button class="btn btn-outline-secondary" onclick="updateQty(-1)">-</button>
-                                    <input type="number" id="qty" class="form-control text-center text-dark" value="1" style="width: 60px" readonly>
-                                    <button class="btn btn-outline-secondary" onclick="updateQty(1)">+</button>
+                        <div class="row g-0">
+                            <div class="col-md-6">
+                                <img src="assets/img/${p.img_path}" class="img-fluid w-100" alt="${p.name}" style="height: 500px; object-fit: cover;">
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card-body p-4">
+                                    <span class="badge bg-info text-dark mb-3 badge-category">${p.category_name}</span>
+                                    <h2 class="card-title fw-bold mb-3">${p.name}</h2>
+                                    <h3 class="text-primary fw-bold mb-4">${p.price_formatted}</h3>
+                                    <p class="card-text lead mb-4">${p.description}</p>
+                                    
+                                    <hr class="my-4">
+                                    
+                                    <div class="mb-4">
+                                        <label class="form-label fw-bold">Quantity</label>
+                                        <div class="input-group w-50">
+                                            <button class="btn btn-outline-secondary" onclick="updateQty(-1)">
+                                                <i class="fa fa-minus"></i>
+                                            </button>
+                                            <input type="number" id="qty" class="form-control text-center fw-bold" value="1" style="width: 80px" readonly>
+                                            <button class="btn btn-outline-secondary" onclick="updateQty(1)">
+                                                <i class="fa fa-plus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-primary btn-lg" onclick="addToCart(${p.id})">
+                                            <i class="fa fa-cart-plus me-2"></i> Add to Cart
+                                        </button>
+                                        <button class="btn btn-success btn-lg" onclick="checkoutNow(${p.id})">
+                                            <i class="fa fa-shopping-bag me-2"></i> Buy Now
+                                        </button>
+                                    </div>
+                                    
+                                    <div class="mt-4 p-3 bg-light rounded">
+                                        <small class="text-muted">
+                                            <i class="fa fa-check-circle text-success me-2"></i> Available for delivery<br>
+                                            <i class="fa fa-truck text-success me-2"></i> Fast delivery available
+                                        </small>
+                                    </div>
                                 </div>
-                                <button class="btn btn-primary btn-lg px-5" onclick="addToCart(${p.id})">
-                                    <i class="fa fa-cart-plus"></i> Add to Cart
-                                </button>
                             </div>
                         </div>
                     </div>
@@ -141,6 +186,29 @@
                         window.location.href = 'index.html';
                     } else {
                         alert('Failed to add to cart. Please login first.');
+                        window.location.href = 'login.html';
+                    }
+                });
+        }
+
+        function checkoutNow(pid) {
+            const qty = document.getElementById('qty').value;
+            const formData = new FormData();
+            formData.append('pid', pid);
+            formData.append('qty', qty);
+
+            fetch('admin/ajax.php?action=add_to_cart', {
+                method: 'POST',
+                body: formData
+            })
+                .then(res => res.text())
+                .then(resp => {
+                    if (resp == 1) {
+                        // Redirect to checkout page
+                        window.location.href = 'checkout.html';
+                    } else {
+                        alert('Please login first to checkout.');
+                        window.location.href = 'login.html';
                     }
                 });
         }

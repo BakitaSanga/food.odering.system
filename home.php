@@ -25,6 +25,10 @@
                         <div class="card-body">
                           <h5 class="card-title"><?php echo $row['name'] ?></h5>
                           <p class="card-text truncate"><?php echo $row['description'] ?></p>
+                          <div class="text-center">
+                              <button class="btn btn-sm btn-outline-primary view_prod btn-block" data-id=<?php echo $row['id'] ?>><i class="fa fa-eye"></i> View</button>
+                              
+                          </div>
                         </div>
                         
                       </div>
@@ -33,6 +37,8 @@
         </div>
     </section>
     <script>
-        
+        $('.view_prod').click(function(){
+            uni_modal_right('Product','view_prod.php?id='+$(this).attr('data-id'))
+        })
     </script>
 	

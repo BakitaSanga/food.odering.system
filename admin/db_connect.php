@@ -1,3 +1,4 @@
+<?php
 /**
  * Database Connection Configuration
  * 
@@ -7,8 +8,6 @@
  * @package FoodOrderingSystem
  * @subpackage Database
  */
-
-<?php 
 /**
  * Database Configuration
  * 
@@ -19,6 +18,8 @@
  */
 
 // Create database connection
+// IMPORTANT for InfinityFree: Replace 'localhost', 'root', and '' with your 
+// MySQL Host, MySQL Username, and MySQL Password from the InfinityFree Control Panel.
 $conn = new mysqli('localhost','root','','fos_db') or die("Could not connect to mysql: " . mysqli_error($conn));
 
 /**
