@@ -4,7 +4,7 @@ This document provides a comprehensive overview of the SQL queries used througho
 
 ---
 
-##  User Authentication & Account Management
+## User Authentication & Account Management
 
 Queries related to user login, signup, and profile management.
 
@@ -72,7 +72,7 @@ DELETE FROM product_list WHERE id = [id];
 
 ---
 
-## 🛒 Shopping Cart & Order Processing
+## Shopping Cart & Order Processing
 
 Queries for handling the ordering lifecycle.
 
@@ -115,7 +115,7 @@ UPDATE orders SET status = 1 WHERE id = [id];
 
 ---
 
-## ⚙️ System Settings
+## System Settings
 
 ### Fetch Site Settings
 **Location:** `api/settings.php:17`

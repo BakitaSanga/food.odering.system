@@ -1,4 +1,4 @@
-# Food Ordering System
+﻿# Food Ordering System
 ## Project Report
 
 **Student Name:** BAKITA SANGA  
@@ -227,19 +227,19 @@ CREATE TABLE order_list (
 ### 3.3 Normalization Analysis
 
 #### First Normal Form (1NF)
-✅ **All tables comply with 1NF:**
+âœ… **All tables comply with 1NF:**
 - All attributes contain atomic (indivisible) values
 - No repeating groups
 - Each column contains values of a single type
 
 #### Second Normal Form (2NF)
-✅ **All tables comply with 2NF:**
+âœ… **All tables comply with 2NF:**
 - All tables are in 1NF
 - All non-key attributes fully depend on the primary key
 - No partial dependencies exist
 
 #### Third Normal Form (3NF)
-✅ **All tables comply with 3NF:**
+âœ… **All tables comply with 3NF:**
 - All tables are in 2NF
 - No transitive dependencies
 - Non-key attributes depend only on the primary key
@@ -251,19 +251,19 @@ CREATE TABLE order_list (
 
 ### 3.4 Relationships
 
-1. **category_list → product_list** (1:M)
+1. **category_list â†’ product_list** (1:M)
    - One category has many products
    
-2. **product_list → cart** (1:M)
+2. **product_list â†’ cart** (1:M)
    - One product can be in multiple carts
    
-3. **user_info → cart** (1:M)
+3. **user_info â†’ cart** (1:M)
    - One user has many cart items
    
-4. **orders → order_list** (1:M)
+4. **orders â†’ order_list** (1:M)
    - One order contains many items
    
-5. **product_list → order_list** (1:M)
+5. **product_list â†’ order_list** (1:M)
    - One product appears in many orders
 
 ---
@@ -292,35 +292,35 @@ The system follows a **Three-Tier Architecture:**
 
 ```
 fos/
-├── admin/                  # Admin panel
-│   ├── assets/            # Admin CSS/JS/Images
-│   ├── ajax.php           # AJAX request handler
-│   ├── admin_class.php    # Core backend logic
-│   ├── db_connect.php     # Database connection
-│   ├── home.php           # Dashboard
-│   ├── menu.php           # Product management
-│   ├── orders.php         # Order management
-│   ├── users.php          # User management
-│   └── site_settings.php  # System settings
-├── api/                   # REST API endpoints
-│   ├── cart.php           # Cart operations
-│   ├── products.php       # Product listing
-│   └── settings.php       # System settings
-├── assets/                # Public assets
-│   ├── css/              # Stylesheets
-│   ├── js/               # JavaScript files
-│   └── img/              # Product images
-├── database/              # Database files
-│   └── fos_db_clean.sql  # Database dump
-├── documentation/         # Project documentation
-│   ├── database_design.md
-│   ├── INSTALLATION.md
-│   └── SECURITY.md
-├── index.html            # Homepage
-├── cart.html             # Shopping cart
-├── checkout.html         # Checkout page
-├── login.html            # Customer login
-└── README.md             # Project overview
+â”œâ”€â”€ admin/                  # Admin panel
+â”‚   â”œâ”€â”€ assets/            # Admin CSS/JS/Images
+â”‚   â”œâ”€â”€ ajax.php           # AJAX request handler
+â”‚   â”œâ”€â”€ admin_class.php    # Core backend logic
+â”‚   â”œâ”€â”€ db_connect.php     # Database connection
+â”‚   â”œâ”€â”€ home.php           # Dashboard
+â”‚   â”œâ”€â”€ menu.php           # Product management
+â”‚   â”œâ”€â”€ orders.php         # Order management
+â”‚   â”œâ”€â”€ users.php          # User management
+â”‚   â””â”€â”€ site_settings.php  # System settings
+â”œâ”€â”€ api/                   # REST API endpoints
+â”‚   â”œâ”€â”€ cart.php           # Cart operations
+â”‚   â”œâ”€â”€ products.php       # Product listing
+â”‚   â””â”€â”€ settings.php       # System settings
+â”œâ”€â”€ assets/                # Public assets
+â”‚   â”œâ”€â”€ css/              # Stylesheets
+â”‚   â”œâ”€â”€ js/               # JavaScript files
+â”‚   â””â”€â”€ img/              # Product images
+â”œâ”€â”€ database/              # Database files
+â”‚   â””â”€â”€ fos_db_clean.sql  # Database dump
+â”œâ”€â”€ documentation/         # Project documentation
+â”‚   â”œâ”€â”€ database_design.md
+â”‚   â”œâ”€â”€ INSTALLATION.md
+â”‚   â””â”€â”€ SECURITY.md
+â”œâ”€â”€ index.html            # Homepage
+â”œâ”€â”€ cart.html             # Shopping cart
+â”œâ”€â”€ checkout.html         # Checkout page
+â”œâ”€â”€ login.html            # Customer login
+â””â”€â”€ README.md             # Project overview
 ```
 
 ### 4.3 Data Flow
@@ -328,38 +328,38 @@ fos/
 #### Customer Order Flow
 ```
 1. Customer browses products (index.html)
-   ↓
+   â†“
 2. Fetch API calls api/products.php
-   ↓
+   â†“
 3. PHP queries database via db_connect.php
-   ↓
+   â†“
 4. JSON response returned to frontend
-   ↓
+   â†“
 5. JavaScript renders products dynamically
-   ↓
+   â†“
 6. Customer adds to cart (AJAX to admin/ajax.php)
-   ↓
+   â†“
 7. Cart stored in database
-   ↓
+   â†“
 8. Checkout process (checkout.html)
-   ↓
+   â†“
 9. Order created in orders & order_list tables
 ```
 
 #### Admin Management Flow
 ```
 1. Admin logs in (admin/index.php)
-   ↓
+   â†“
 2. Session created with admin credentials
-   ↓
+   â†“
 3. Dashboard displays analytics (admin/home.php)
-   ↓
+   â†“
 4. Admin manages products (admin/menu.php)
-   ↓
+   â†“
 5. CRUD operations via admin/ajax.php
-   ↓
+   â†“
 6. admin_class.php handles database operations
-   ↓
+   â†“
 7. Changes reflected immediately
 ```
 
@@ -556,54 +556,54 @@ $filename = time() . '_' . basename($_FILES['img']['name']);
 ### 7.1 Unit Testing
 
 #### Database Operations
-- ✅ User registration creates record
-- ✅ Login validates credentials
-- ✅ Product CRUD operations work
-- ✅ Cart operations function correctly
-- ✅ Order creation successful
+- âœ… User registration creates record
+- âœ… Login validates credentials
+- âœ… Product CRUD operations work
+- âœ… Cart operations function correctly
+- âœ… Order creation successful
 
 #### API Endpoints
-- ✅ `/api/products.php` returns JSON
-- ✅ `/api/cart.php` requires authentication
-- ✅ `/api/settings.php` returns settings
+- âœ… `/api/products.php` returns JSON
+- âœ… `/api/cart.php` requires authentication
+- âœ… `/api/settings.php` returns settings
 
 ### 7.2 Integration Testing
 
 #### Customer Flow
-1. ✅ Register new account
-2. ✅ Login successfully
-3. ✅ Browse products
-4. ✅ Add to cart
-5. ✅ Update quantities
-6. ✅ Complete checkout
-7. ✅ Order appears in admin panel
+1. âœ… Register new account
+2. âœ… Login successfully
+3. âœ… Browse products
+4. âœ… Add to cart
+5. âœ… Update quantities
+6. âœ… Complete checkout
+7. âœ… Order appears in admin panel
 
 #### Admin Flow
-1. ✅ Admin login
-2. ✅ View dashboard
-3. ✅ Add product
-4. ✅ Edit product
-5. ✅ Delete product
-6. ✅ Process order
-7. ✅ Manage users
+1. âœ… Admin login
+2. âœ… View dashboard
+3. âœ… Add product
+4. âœ… Edit product
+5. âœ… Delete product
+6. âœ… Process order
+7. âœ… Manage users
 
 ### 7.3 Browser Compatibility
 
 | Browser | Version | Status |
 |---------|---------|--------|
-| Chrome | 90+ | ✅ Tested |
-| Firefox | 88+ | ✅ Tested |
-| Safari | 14+ | ✅ Tested |
-| Edge | 90+ | ✅ Tested |
+| Chrome | 90+ | âœ… Tested |
+| Firefox | 88+ | âœ… Tested |
+| Safari | 14+ | âœ… Tested |
+| Edge | 90+ | âœ… Tested |
 
 ### 7.4 Responsive Design Testing
 
 | Device | Screen Size | Status |
 |--------|-------------|--------|
-| Desktop | 1920x1080 | ✅ Optimized |
-| Laptop | 1366x768 | ✅ Optimized |
-| Tablet | 768x1024 | ✅ Responsive |
-| Mobile | 375x667 | ✅ Responsive |
+| Desktop | 1920x1080 | âœ… Optimized |
+| Laptop | 1366x768 | âœ… Optimized |
+| Tablet | 768x1024 | âœ… Responsive |
+| Mobile | 375x667 | âœ… Responsive |
 
 ---
 

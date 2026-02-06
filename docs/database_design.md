@@ -1,84 +1,84 @@
-# Database Design Documentation
+﻿# Database Design Documentation
 ## Food Ordering System
 
 ### Entity-Relationship Diagram
 
 ```
-┌─────────────────┐         ┌──────────────────┐         ┌─────────────────┐
-│     USERS       │         │    USER_INFO     │         │  CATEGORY_LIST  │
-│  (Admin Users)  │         │   (Customers)    │         │  (Categories)   │
-├─────────────────┤         ├──────────────────┤         ├─────────────────┤
-│ PK: id          │         │ PK: user_id      │         │ PK: id          │
-│    name         │         │    first_name    │         │    name         │
-│    username     │         │    last_name     │         └────────┬────────┘
-│    password     │         │    email         │                  │
-│    type         │         │    password      │                  │ 1
-└─────────────────┘         │    mobile        │                  │
-                            │    address       │                  │
-                            └──────────────────┘                  │
-                                                                  │
-┌─────────────────┐                                              │
-│      CART       │                                              │
-├─────────────────┤                                              │
-│ PK: id          │         ┌──────────────────┐                 │
-│ FK: user_id     │────┐    │  PRODUCT_LIST    │                 │
-│ FK: product_id  │────┼───▶│   (Menu Items)   │                 │
-│    client_ip    │    │    ├──────────────────┤                 │
-│    qty          │    │    │ PK: id           │                 │
-└─────────────────┘    │    │ FK: category_id  │◀────────────────┘
-                       │    │    name          │              M
-                       │    │    description   │
-                       │    │    price         │
-┌─────────────────┐    │    │    img_path      │
-│     ORDERS      │    │    │    status        │
-├─────────────────┤    │    └────────┬─────────┘
-│ PK: id          │    │             │
-│    name         │    │             │ 1
-│    address      │    │             │
-│    mobile       │    │             │
-│    email        │    │             │ M
-│    status       │    │    ┌────────▼─────────┐
-└────────┬────────┘    │    │   ORDER_LIST     │
-         │             │    │  (Order Items)   │
-         │ 1           │    ├──────────────────┤
-         │             └───▶│ PK: id           │
-         │ M                │ FK: order_id     │
-         │                  │ FK: product_id   │
-         │                  │    qty           │
-         │                  └──────────────────┘
-         │
-         │
-┌────────▼────────┐
-│ SYSTEM_SETTINGS │
-├─────────────────┤
-│ PK: id          │
-│    hotel_name   │
-│    email        │
-│    contact      │
-│    cover_img    │
-│    about_content│
-└─────────────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚     USERS       â”‚         â”‚    USER_INFO     â”‚         â”‚  CATEGORY_LIST  â”‚
+â”‚  (Admin Users)  â”‚         â”‚   (Customers)    â”‚         â”‚  (Categories)   â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤         â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤         â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚ PK: id          â”‚         â”‚ PK: user_id      â”‚         â”‚ PK: id          â”‚
+â”‚    name         â”‚         â”‚    first_name    â”‚         â”‚    name         â”‚
+â”‚    username     â”‚         â”‚    last_name     â”‚         â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+â”‚    password     â”‚         â”‚    email         â”‚                  â”‚
+â”‚    type         â”‚         â”‚    password      â”‚                  â”‚ 1
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜         â”‚    mobile        â”‚                  â”‚
+                            â”‚    address       â”‚                  â”‚
+                            â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                  â”‚
+                                                                  â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                                              â”‚
+â”‚      CART       â”‚                                              â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤                                              â”‚
+â”‚ PK: id          â”‚         â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”                 â”‚
+â”‚ FK: user_id     â”‚â”€â”€â”€â”€â”    â”‚  PRODUCT_LIST    â”‚                 â”‚
+â”‚ FK: product_id  â”‚â”€â”€â”€â”€â”¼â”€â”€â”€â–¶â”‚   (Menu Items)   â”‚                 â”‚
+â”‚    client_ip    â”‚    â”‚    â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤                 â”‚
+â”‚    qty          â”‚    â”‚    â”‚ PK: id           â”‚                 â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚    â”‚ FK: category_id  â”‚â—€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                       â”‚    â”‚    name          â”‚              M
+                       â”‚    â”‚    description   â”‚
+                       â”‚    â”‚    price         â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”    â”‚    â”‚    img_path      â”‚
+â”‚     ORDERS      â”‚    â”‚    â”‚    status        â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤    â”‚    â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+â”‚ PK: id          â”‚    â”‚             â”‚
+â”‚    name         â”‚    â”‚             â”‚ 1
+â”‚    address      â”‚    â”‚             â”‚
+â”‚    mobile       â”‚    â”‚             â”‚
+â”‚    email        â”‚    â”‚             â”‚ M
+â”‚    status       â”‚    â”‚    â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”˜    â”‚    â”‚   ORDER_LIST     â”‚
+         â”‚             â”‚    â”‚  (Order Items)   â”‚
+         â”‚ 1           â”‚    â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+         â”‚             â””â”€â”€â”€â–¶â”‚ PK: id           â”‚
+         â”‚ M                â”‚ FK: order_id     â”‚
+         â”‚                  â”‚ FK: product_id   â”‚
+         â”‚                  â”‚    qty           â”‚
+         â”‚                  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+         â”‚
+         â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚ SYSTEM_SETTINGS â”‚
+â”œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¤
+â”‚ PK: id          â”‚
+â”‚    hotel_name   â”‚
+â”‚    email        â”‚
+â”‚    contact      â”‚
+â”‚    cover_img    â”‚
+â”‚    about_contentâ”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### Relationships
 
-1. **CATEGORY_LIST → PRODUCT_LIST** (1:M)
+1. **CATEGORY_LIST â†’ PRODUCT_LIST** (1:M)
    - One category can have many products
    - Each product belongs to one category
 
-2. **PRODUCT_LIST → CART** (1:M)
+2. **PRODUCT_LIST â†’ CART** (1:M)
    - One product can be in many cart items
    - Each cart item references one product
 
-3. **USER_INFO → CART** (1:M)
+3. **USER_INFO â†’ CART** (1:M)
    - One customer can have many cart items
    - Each cart item belongs to one customer
 
-4. **ORDERS → ORDER_LIST** (1:M)
+4. **ORDERS â†’ ORDER_LIST** (1:M)
    - One order can have many order items
    - Each order item belongs to one order
 
-5. **PRODUCT_LIST → ORDER_LIST** (1:M)
+5. **PRODUCT_LIST â†’ ORDER_LIST** (1:M)
    - One product can appear in many orders
    - Each order item references one product
 
@@ -102,15 +102,15 @@ Organizes products into logical groups.
 #### 4. product_list (Menu Items)
 Contains all available food items with pricing and details.
 - **Primary Key**: id
-- **Foreign Key**: category_id → category_list(id)
+- **Foreign Key**: category_id â†’ category_list(id)
 - **Purpose**: Product catalog management
 
 #### 5. cart (Shopping Cart)
 Temporary storage for items before checkout.
 - **Primary Key**: id
 - **Foreign Keys**: 
-  - user_id → user_info(user_id)
-  - product_id → product_list(id)
+  - user_id â†’ user_info(user_id)
+  - product_id â†’ product_list(id)
 - **Purpose**: Session-based shopping cart
 
 #### 6. orders (Order Headers)
@@ -122,8 +122,8 @@ Stores order summary and customer delivery information.
 Details of products in each order with quantities.
 - **Primary Key**: id
 - **Foreign Keys**:
-  - order_id → orders(id)
-  - product_id → product_list(id)
+  - order_id â†’ orders(id)
+  - product_id â†’ product_list(id)
 - **Purpose**: Order details and inventory tracking
 
 #### 8. system_settings (Configuration)
@@ -142,119 +142,119 @@ Application-wide settings and branding.
 
 ### Table Analysis
 
-#### ✅ users (3NF Compliant)
+#### âœ… users (3NF Compliant)
 **Attributes**: id, name, username, password, type
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - name depends only on id
   - username depends only on id
   - password depends only on id
   - type depends only on id
 
-**Functional Dependencies**: id → {name, username, password, type}
+**Functional Dependencies**: id â†’ {name, username, password, type}
 
 ---
 
-#### ✅ user_info (3NF Compliant)
+#### âœ… user_info (3NF Compliant)
 **Attributes**: user_id, first_name, last_name, email, password, mobile, address
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (user_id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (user_id)
+- **3NF**: âœ“ No transitive dependencies
   - All attributes directly depend on user_id
   - No attribute depends on another non-key attribute
 
-**Functional Dependencies**: user_id → {first_name, last_name, email, password, mobile, address}
+**Functional Dependencies**: user_id â†’ {first_name, last_name, email, password, mobile, address}
 
 ---
 
-#### ✅ category_list (3NF Compliant)
+#### âœ… category_list (3NF Compliant)
 **Attributes**: id, name
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ name depends on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies (only one non-key attribute)
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ name depends on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies (only one non-key attribute)
 
-**Functional Dependencies**: id → name
+**Functional Dependencies**: id â†’ name
 
 ---
 
-#### ✅ product_list (3NF Compliant)
+#### âœ… product_list (3NF Compliant)
 **Attributes**: id, category_id, name, description, price, img_path, status
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - category_id is a foreign key (allowed)
   - All other attributes depend only on id
   - No attribute depends on category_id
 
 **Functional Dependencies**: 
-- id → {category_id, name, description, price, img_path, status}
-- category_id → category_name (handled by JOIN, not stored)
+- id â†’ {category_id, name, description, price, img_path, status}
+- category_id â†’ category_name (handled by JOIN, not stored)
 
 ---
 
-#### ✅ cart (3NF Compliant)
+#### âœ… cart (3NF Compliant)
 **Attributes**: id, client_ip, user_id, product_id, qty
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - user_id and product_id are foreign keys (allowed)
   - qty depends only on id
   - client_ip depends only on id
 
-**Functional Dependencies**: id → {client_ip, user_id, product_id, qty}
+**Functional Dependencies**: id â†’ {client_ip, user_id, product_id, qty}
 
 ---
 
-#### ✅ orders (3NF Compliant)
+#### âœ… orders (3NF Compliant)
 **Attributes**: id, name, address, mobile, email, status
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - All customer info depends only on order id
   - Denormalization for performance (order snapshot)
 
-**Functional Dependencies**: id → {name, address, mobile, email, status}
+**Functional Dependencies**: id â†’ {name, address, mobile, email, status}
 
 **Note**: Customer information is intentionally duplicated to preserve order details even if customer account is deleted.
 
 ---
 
-#### ✅ order_list (3NF Compliant)
+#### âœ… order_list (3NF Compliant)
 **Attributes**: id, order_id, product_id, qty
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - order_id and product_id are foreign keys (allowed)
   - qty depends only on id
 
-**Functional Dependencies**: id → {order_id, product_id, qty}
+**Functional Dependencies**: id â†’ {order_id, product_id, qty}
 
 ---
 
-#### ✅ system_settings (3NF Compliant)
+#### âœ… system_settings (3NF Compliant)
 **Attributes**: id, hotel_name, email, contact, cover_img, about_content
 
-- **1NF**: ✓ All values are atomic
-- **2NF**: ✓ All attributes depend on entire primary key (id)
-- **3NF**: ✓ No transitive dependencies
+- **1NF**: âœ“ All values are atomic
+- **2NF**: âœ“ All attributes depend on entire primary key (id)
+- **3NF**: âœ“ No transitive dependencies
   - All settings depend only on id
   - No setting depends on another setting
 
-**Functional Dependencies**: id → {hotel_name, email, contact, cover_img, about_content}
+**Functional Dependencies**: id â†’ {hotel_name, email, contact, cover_img, about_content}
 
 ---
 
 ## Summary
 
-✅ **All 8 tables are in Third Normal Form (3NF)**
+âœ… **All 8 tables are in Third Normal Form (3NF)**
 
 ### Key Points:
 1. No repeating groups (1NF)
