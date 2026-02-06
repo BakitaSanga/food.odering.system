@@ -48,6 +48,8 @@ The database has been normalized to the **Third Normal Form (3NF)** to ensure da
 - **products** and **categories**: Menu data.
 - **orders** and **order_list**: Transactional data (Orders linked to Users).
 
+For a detailed list of all system SQL queries, see the [Database Queries Report](docs/DB_QUERIES.md).
+
 ## Installation and Setup Guide
 
 ### Prerequisites

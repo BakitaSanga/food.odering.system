@@ -9,6 +9,7 @@ The Food Ordering System is designed with multiple layers of security to protect
 
 ### 2. Database Security
 - **SQL Injection Prevention**: Prepared statements are used for critical database operations to mitigate the risk of SQL injection attacks.
+- **Query Audit**: All database interactions are documented in the [Database Queries Report](../docs/DB_QUERIES.md) for security review.
 - **Input Sanitization**: All user inputs are sanitized using `htmlspecialchars` and proper validation to prevent Cross-Site Scripting (XSS).
 
 ### 3. Role-Based Access Control (RBAC)
