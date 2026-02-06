@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Cart - Food Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e67e22;
+            --secondary-color: #27ae60;
+            --dark-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f9f9f9;
+            padding-top: 80px;
+            color: var(--dark-color);
+        }
+
+        .navbar {
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+        }
+
+        .navbar-brand {
+            color: var(--secondary-color) !important;
+            font-weight: 800;
+            font-size: 1.5rem;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: #d35400;
+        }
+
+        .card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
+        }
+
+        .cart-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .table td {
+            vertical-align: middle;
+        }
+
+        .qty-input {
+            width: 70px;
+            text-align: center;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="index.html"><i class="fas fa-utensils me-2"></i>FoodOrder</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h2 class="fw-bold mb-4">Shopping Cart</h2>
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card p-3 mb-4">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr class="text-muted small border-bottom">
+                                    <th>Product</th>
+                                    <th>Price</th>
+                                    <th>Quantity</th>
+                                    <th>Total</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="cart-items">
+                                <tr>
+                                    <td colspan="5" class="text-center py-4">
+                                        <div class="spinner-border text-primary"></div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card p-4">
+                    <h5 class="fw-bold mb-3">Order Summary</h5>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span>Total:</span>
+                        <strong class="fs-4 text-primary" id="cart-total">0 TSH</strong>
+                    </div>
+                    <button class="btn btn-primary w-100 py-3" onclick="window.location.href='checkout.html'">Proceed to
+                        Checkout</button>
+                    <a href="index.html" class="btn btn-link text-muted w-100 mt-2 text-decoration-none">Continue
+                        Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            loadCart();
+        });
+
+        function loadCart() {
+            $.ajax({
+                url: 'api/cart.php',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.status == 'error') {
+                        $('#cart-items').html('<tr><td colspan="5" class="text-center py-4">Please <a href="login.html">Login</a> to view cart</td></tr>');
+                        return;
+                    }
+                    if (res.items.length == 0) {
+                        $('#cart-items').html('<tr><td colspan="5" class="text-center py-4">Your cart is empty</td></tr>');
+                        $('#cart-total').text('0 TSH');
+                        return;
+                    }
+
+                    let rows = '';
+                    res.items.forEach(item => {
+                        rows += `
+                            <tr class="border-bottom">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <img src="assets/img/${item.img_path}" class="cart-img me-3">
+                                        <span class="fw-bold">${item.name}</span>
+                                    </div>
+                                </td>
+                                <td>${item.price_formatted}</td>
+                                <td><input type="number" min="1" class="qty-input" value="${item.qty}" onchange="updateQty(${item.id}, this.value)"></td>
+                                <td class="fw-bold">${item.total_formatted}</td>
+                                <td><button class="btn btn-sm btn-outline-danger rounded-circle" onclick="deleteItem(${item.id})"><i class="fa fa-times"></i></button></td>
+                            </tr>
+                        `;
+                    });
+                    $('#cart-items').html(rows);
+                    $('#cart-total').text(res.total_formatted);
+                }
+            });
+        }
+
+        function deleteItem(id) {
+            if (confirm('Remove this item from cart?')) {
+                $.ajax({
+                    url: 'admin/ajax.php?action=delete_cart',
+                    method: 'POST',
+                    data: { id: id },
+                    success: function (resp) {
+                        if (resp == 1) {
+                            loadCart();
+                        }
+                    }
+                })
+            }
+        }
+
+        function updateQty(id, qty) {
+            if (qty < 1) {
+                alert('Quantity must be at least 1');
+                loadCart();
+                return;
+            }
+
+            $.ajax({
+                url: 'admin/ajax.php?action=update_cart_qty',
+                method: 'POST',
+                data: { id: id, qty: qty },
+                success: function (resp) {
+                    if (resp == 1) {
+                        loadCart();
+                    } else {
+                        alert('Failed to update quantity');
+                        loadCart();
+                    }
+                }
+            });
+        }
+    </script>
+</body>
+
+</html>

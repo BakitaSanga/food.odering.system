@@ -1,0 +1,47 @@
+# Ignore system files
+.DS_Store
+Thumbs.db
+
+# Ignore IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Ignore temporary files
+*.tmp
+*.temp
+*.log
+*.swp
+*.swo
+*~
+
+# Include uploaded images for a complete submission
+# assets/img/*
+# !assets/img/.gitkeep
+# admin/assets/img/*
+# !admin/assets/img/.gitkeep
+
+# Ignore database connection (for security)
+# admin/db_connect.php
+
+# Ignore node modules if any
+node_modules/
+
+# Ignore environment files
+.env
+.env.local
+
+# Ignore backup files
+*.bak
+*.backup
+*.old
+
+# Ignore OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini

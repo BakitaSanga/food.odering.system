@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login - Food Order</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #e67e22;
+            --secondary-color: #27ae60;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .card {
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50px;
+            padding: 10px 30px;
+        }
+
+        .btn-primary:hover {
+            background: #d35400;
+        }
+
+        .form-control {
+            border-radius: 10px;
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+        }
+
+        .card-header {
+            background: white;
+            border-bottom: 1px solid #eee;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .card-header h3 {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="mb-0">Welcome Back</h3>
+                        <p class="text-muted small mb-0">Login to your account</p>
+                    </div>
+                    <div class="card-body p-4">
+                        <form id="login-form">
+                            <div class="mb-3">
+                                <label class="form-label text-muted small">Email</label>
+                                <input type="email" name="email" class="form-control" required>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted small">Password</label>
+                                <input type="password" name="password" class="form-control" required>
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Login</button>
+                            </div>
+                            <div class="text-center mt-4">
+                                <small>Don't have an account? <a href="signup.html"
+                                        class="text-secondary text-decoration-none fw-bold">Sign Up</a></small>
+                            </div>
+                            <div class="text-center mt-2">
+                                <small><a href="index.html" class="text-muted text-decoration-none">Back to
+                                        Home</a></small>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $('#login-form').submit(function (e) {
+            e.preventDefault();
+            const btn = $(this).find('button');
+            btn.prop('disabled', true).text('Logging in...');
+
+            $.ajax({
+                url: 'admin/ajax.php?action=login2',
+                method: 'POST',
+                data: $(this).serialize(),
+                success: function (resp) {
+                    if (resp == 1) {
+                        window.location.href = 'index.html';
+                    } else {
+                        alert('Invalid email or password.');
+                        btn.prop('disabled', false).text('Login');
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
