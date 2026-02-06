@@ -4,7 +4,7 @@ This document provides a comprehensive overview of the SQL queries used througho
 
 ---
 
-## 🔐 User Authentication & Account Management
+##  User Authentication & Account Management
 
 Queries related to user login, signup, and profile management.
 
@@ -41,7 +41,7 @@ INSERT INTO password_resets (email, token, expires_at) VALUES ('[email]', '[toke
 
 ---
 
-## 🍲 Product & Menu Management
+## Product & Menu Management
 
 Queries for managing categories and food items.
 
